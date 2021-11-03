@@ -1,10 +1,10 @@
 
 """
 # -- --------------------------------------------------------------------------------------------------- -- #
-# -- project: A SHORT DESCRIPTION OF THE PROJECT                                                         -- #
+# -- project: Aquí se encuentran las funciones del lab1 de MYST                                       -- #
 # -- script: functions.py : python script with general functions                                         -- #
-# -- author: YOUR GITHUB USER NAME                                                                       -- #
+# -- author: labv98                                                                      -- #
 # -- license: GPL-3.0 License                                                                            -- #
-# -- repository: YOUR REPOSITORY URL                                                                     -- #
+# -- repository: https://github.com/labv98/Lab1_B.git                                                   -- #
 # -- --------------------------------------------------------------------------------------------------- -- #
 """
