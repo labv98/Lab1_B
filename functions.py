@@ -21,6 +21,9 @@ import yfinance as yf
 
 class FilesHandler:
 
+    def __init__(self):
+        pass
+
     @staticmethod
     def read_df():
         """Esta función lee los archivos de la carpeta llamada files
@@ -51,13 +54,6 @@ class FilesHandler:
 
         return df
 
-
-class TickersHandler:
-
-    def __init__(self):
-        pass
-
-    @staticmethod
     def tickers(self):
         """Esta función descarga los datos por parte de yahoo finance y los
         organiza respecto al precio de cierre de los activos denominados como
@@ -71,14 +67,18 @@ class TickersHandler:
         data_close = pd.DataFrame({i: data_down[i]['Close'] for i in tickers})
         return tickers, data_down, data_close
 
-    @staticmethod
-    def f_data_fin(self, path, k, c):
+    def f_data_fin(self) -> pd.DataFrame:
         """Esta función lee el primer archivo de todos los contenidos en la carpeta de
         files correspondiente a NAFTRAC_20180131, hace su tratamiento de datos
         correspondiente y nos regresa un DataFrame que contiene los activos, pesos, títulos,
         precios, comisiones y la postura."""
 
-        file = pd.read_csv(path, skiprows=2)
+        # Datos dados de capital y comisiones
+        k=1000000
+        c=0.00125
+
+        file = pd.read_csv('/Users/alejandrabarraganvazquez/Downloads/MyST/Lab1_B/files/NAFTRAC_20180131.csv',
+                           skiprows=2)
         data_fin = file.copy().sort_values('Ticker')[['Ticker', 'Peso (%)']]
         # Reemplazo de información
         data_fin['Ticker'] = [i.replace("GFREGIOO", "RA") for i in data_fin['Ticker']]
@@ -91,10 +91,9 @@ class TickersHandler:
         # Pasar los pesos a decimal
         data_fin['Peso (%)'] = data_fin['Peso (%)'] / 100
         # Quitar los activos que no necesitamos
+        tickers, data_down, data_close = self.tickers()
         data_fin.set_index("Ticker", inplace=True)
         data_fin.drop(['KOFL.MX', 'BSMXB.MX', 'MXN.MX'], inplace=True)
-
-        data_close = self.tickers()
         data_fin['Precios'] = data_close[data_fin.index].iloc[0, :]
         data_fin['Titulos'] = np.floor((k * data_fin['Peso (%)']) /
                                        (data_fin['Precios'] + (data_fin['Precios'] * c)))
@@ -109,16 +108,25 @@ class TickersHandler:
 
 
 class PassiveInvestment:
-    def __init__(self, k, c, data_fin, data_close) -> None:
-        self.data_fin = data_fin
-        self.data_close = data_close
-        self.inv_pasiva(k, c, data_fin, data_close)
 
-    def inv_pasiva(self, k, c, data_fin, data_close):
+    def __init__(self):
+        pass
+
+    @staticmethod
+    def f_data_fin():
+        return FilesHandler().f_data_fin()
+
+    @staticmethod
+    def tickers():
+        return FilesHandler().tickers()
+
+    def inv_pasiva(self):
         """Función que retorna un DataFrame con la información completa de una
         inversión pasiva desde inicio de la fecha en los archivos hasta el final
         del periodo que es en octubre 2021."""
-
+        data_fin = self.f_data_fin()
+        tickers, data_down, data_close = self.tickers()
+        k = 1000000
         # Cash
         cash = (1 - data_fin['Peso (%)'].sum()) * k
         # Comisiones
@@ -137,14 +145,12 @@ class PassiveInvestment:
             0, 'Capital']
         return df_pasiva
 
-    @staticmethod
     def ant_pan(self) -> pd.DataFrame:
         """Función que muestra el DataFrame de la inversión pasiva antes de pandemia."""
         df_pasiva = self.inv_pasiva()
         df_pasiva_ap = df_pasiva.loc[0:24]
         return df_pasiva_ap
 
-    @staticmethod
     def dur_pan(self) -> pd.DataFrame:
         """Función que muestra el DataFrame de la inversión pasiva durante pandemia."""
         df_pasiva = self.inv_pasiva()
