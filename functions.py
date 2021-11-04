@@ -130,3 +130,18 @@ class PassiveInvestment:
         df_pasiva['Rendimiento Acumulado'] = (df_pasiva['Capital'] - df_pasiva.loc[0, 'Capital']) / df_pasiva.loc[
             0, 'Capital']
         return df_pasiva
+
+    @staticmethod
+    def ant_pan():
+        """Función que muestra el DataFrame de la inversión pasiva antes de pandemia."""
+
+        df_pasiva_ap = df_pasiva.loc[0:24]
+        return df_pasiva_ap
+
+    @staticmethod
+    def dur_pan():
+        """Función que muestra el DataFrame de la inversión pasiva durante pandemia."""
+
+        df_pasiva_dp = df_pasiva.loc[24:]
+        df_pasiva_dp['Rendimiento Acumulado'] = df_pasiva_dp['Rendimiento'].cumsum()
+        return df_pasiva_dp
