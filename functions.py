@@ -20,14 +20,15 @@ import yfinance as yf
 
 
 class FilesHandler:
+
     @staticmethod
-    def read_df(path):
+    def read_df():
         """Esta función lee los archivos de la carpeta llamada files
         donde se encuentran los ETF, una vez que los lee los concatena en
         un DataFrame y realiza el tratamiento de datos para quedarnos con lo
         necesario para el análisis."""
 
-        filenames = glob.glob(path + "/*.csv")
+        filenames = glob.glob('/Users/alejandrabarraganvazquez/Downloads/MyST/Lab1_B/files' + "/*.csv")
         dfs = []
         for filename in filenames:
             dfs.append(pd.read_csv(filename, skiprows=2))
@@ -45,19 +46,23 @@ class FilesHandler:
         # Pasar los pesos a decimal
         df['Peso (%)'] = df['Peso (%)'] / 100
         # Quitar los activos que no necesitamos
-        idx = df.set_index("Ticker", inplace=True)
+        df.set_index("Ticker", inplace=True)
         df.drop(['KOFL.MX', 'KOFUBL.MX', 'USD.MX', 'BSMXB.MX', 'NMKA.MX', 'MXN.MX'], inplace=True)
 
         return df
 
 
 class TickersHandler:
+
+    def __init__(self):
+        pass
+
     @staticmethod
-    def tickers():
+    def tickers(self):
         """Esta función descarga los datos por parte de yahoo finance y los
         organiza respecto al precio de cierre de los activos denominados como
         tickers y guardados en esa variable."""
-
+        df = self.read_df()
         tickers = df.index.tolist()
         tickers = np.unique(tickers).tolist()
         data_down = yf.download(tickers, start="2018-01-31", actions=False,
@@ -67,7 +72,7 @@ class TickersHandler:
         return tickers, data_down, data_close
 
     @staticmethod
-    def f_data_fin(path, k, c):
+    def f_data_fin(self, path, k, c):
         """Esta función lee el primer archivo de todos los contenidos en la carpeta de
         files correspondiente a NAFTRAC_20180131, hace su tratamiento de datos
         correspondiente y nos regresa un DataFrame que contiene los activos, pesos, títulos,
@@ -89,6 +94,7 @@ class TickersHandler:
         data_fin.set_index("Ticker", inplace=True)
         data_fin.drop(['KOFL.MX', 'BSMXB.MX', 'MXN.MX'], inplace=True)
 
+        data_close = self.tickers()
         data_fin['Precios'] = data_close[data_fin.index].iloc[0, :]
         data_fin['Titulos'] = np.floor((k * data_fin['Peso (%)']) /
                                        (data_fin['Precios'] + (data_fin['Precios'] * c)))
@@ -132,16 +138,16 @@ class PassiveInvestment:
         return df_pasiva
 
     @staticmethod
-    def ant_pan():
+    def ant_pan(self) -> pd.DataFrame:
         """Función que muestra el DataFrame de la inversión pasiva antes de pandemia."""
-
+        df_pasiva = self.inv_pasiva()
         df_pasiva_ap = df_pasiva.loc[0:24]
         return df_pasiva_ap
 
     @staticmethod
-    def dur_pan():
+    def dur_pan(self) -> pd.DataFrame:
         """Función que muestra el DataFrame de la inversión pasiva durante pandemia."""
-
+        df_pasiva = self.inv_pasiva()
         df_pasiva_dp = df_pasiva.loc[24:]
         df_pasiva_dp['Rendimiento Acumulado'] = df_pasiva_dp['Rendimiento'].cumsum()
         return df_pasiva_dp
