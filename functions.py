@@ -74,8 +74,8 @@ class FilesHandler:
         precios, comisiones y la postura."""
 
         # Datos dados de capital y comisiones
-        k=1000000
-        c=0.00125
+        k = 1000000
+        c = 0.00125
 
         file = pd.read_csv('/Users/alejandrabarraganvazquez/Downloads/MyST/Lab1_B/files/NAFTRAC_20180131.csv',
                            skiprows=2)
@@ -106,6 +106,8 @@ class FilesHandler:
 
         return data_fin
 
+# ---- INVERSIÓN PASIVA ----
+
 
 class PassiveInvestment:
 
@@ -130,7 +132,7 @@ class PassiveInvestment:
         # Cash
         cash = (1 - data_fin['Peso (%)'].sum()) * k
         # Comisiones
-        comision_sum = data_fin['Comisiones'].sum()
+        # comision_sum = data_fin['Comisiones'].sum()
         ind_pas = []
         for i in range(1, len(data_close.index)):
             if data_close.index[i - 1].month != data_close.index[i].month:
@@ -157,3 +159,11 @@ class PassiveInvestment:
         df_pasiva_dp = df_pasiva.loc[24:]
         df_pasiva_dp['Rendimiento Acumulado'] = df_pasiva_dp['Rendimiento'].cumsum()
         return df_pasiva_dp
+
+# ---- PORTAFOLIO ÓPTIMO ----
+
+
+# ---- INVERSIÓN ACTIVA ----
+
+
+
