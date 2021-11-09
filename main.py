@@ -1,48 +1,47 @@
 
 """
 # -- --------------------------------------------------------------------------------------------------- -- #
-# -- project: A SHORT DESCRIPTION OF THE PROJECT                                                         -- #
+# -- project: Aquí se encuentra el main del laboratorio 1 realizado con OOP                            -- #
 # -- script: main.py : python script with the main functionality                                         -- #
-# -- author: YOUR GITHUB USER NAME                                                                       -- #
+# -- author: labv98                                                                       -- #
 # -- license: GPL-3.0 License                                                                            -- #
-# -- repository: YOUR REPOSITORY URL                                                                     -- #
+# -- repository: https://github.com/labv98/Lab1_B.git                                                  -- #
 # -- --------------------------------------------------------------------------------------------------- -- #
 """
 
-import pandas as pd
-import data as dt
+# ---- LIBRERÍAS ----
 
-# -- TEST 1 : 
-# verify that the script is being read
-print(dt.dict_test)
+from functions import *
 
-# -- TEST 2 :
-# verify that installed pandas module works correctly
-df_dict_test = pd.DataFrame(dt.dict_test, index=[0, 1])
-print(df_dict_test)
+# Por si existe algún warning
+import warnings
+warnings.simplefilter("ignore")
 
-# -- TEST 3 :
-# verify you can use plotly and visualize plots in jupyter notebook
+# ---- TRATAMIENTO DE DATOS ----
 
-import chart_studio.plotly as py   # various tools (jupyter offline print)
-import plotly.graph_objects as go  # plotting engine
+FilesHandler().read_df().head(10)
 
-# example data
-df = pd.DataFrame({'column_a': [1, 2, 3, 4, 5], 'column_b': [1, 2, 3, 4, 5]})
-# basic plotly plot
-data = [go.Bar(x=df['column_a'], y=df['column_b'])]
-# instruction to view it inside jupyter
-py.iplot(data, filename='jupyter-basic_bar')
-# (alternatively) instruction to view it in web app of plotly
-# py.plot(data)
+tickers, data_down, data_close = FilesHandler().tickers()
+print(data_close.head(5))
 
-# -- TEST 4 :
-# verify you can use plotly and visualize plots in web browser locally
+data_fin = FilesHandler().f_data_fin()
+print(data_fin)
 
-import plotly.io as pio            # to define input-output of plots
-pio.renderers.default = "browser"  # to render the plot locally in your default web browser
+# ---- INVERSIÓN PASIVA ----
 
-# basic plotly plot
-plot_data = go.Figure(go.Bar(x=df['column_a'], y=df['column_b']))
-# instruction to view it in specified render (in this case browser)
-plot_data.show()
+PassiveInvestment().inv_pasiva()
+
+PassiveInvestment().ant_pan()
+
+PassiveInvestment().dur_pan()
+
+# ---- INVERSIÓN ACTIVA ----
+
+df_activa, df_operaciones = ActiveInvestment().inv_activa()
+print(df_activa)
+
+print(df_operaciones)
+
+# ---- MEDIDAS ----
+
+Medidas().medidas()
